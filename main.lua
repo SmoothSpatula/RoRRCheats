@@ -32,14 +32,15 @@ function kill_username(username)
     end
 end
 
-function give_item(item_name, username, amount)
+function give_item_name(item_name, username, amount)
   if amount == nil then amount = 1 end
   print( "give "..username.." "..amount.." "..item_name)
 end
-  
+
 -- ========== Main ==========
 
-command = "/kill"
+command = "/give Umigatari 12 GoatHoof"
+--command = "/kill"
 for command_name, pattern in pairs(match_strings) do
   if string.match(command, pattern) then
     _G[command_name] (string.match(command, pattern))
