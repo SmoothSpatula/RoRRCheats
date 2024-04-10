@@ -1,0 +1,10 @@
+﻿{
+	"name": "SmoothSpatula-TestMod",
+	"version_number": "1.0.0",
+	"website_url": "yes",
+	"description": "yes",
+	"dependencies": [
+		"ReturnOfModding-ReturnOfModding-1.0.0",
+		"SmoothSpatula-TomlHelper-1.0.0"
+	]
+}
