@@ -62,8 +62,9 @@ end)
 
 -- ========== Main ==========
 
---command = "/give GoatHoof Umigatari 12"
---command = "/kill"
+--command examples
+-- /give GoatHoof Umigatari 12
+-- /kill
 
 function match_command(actor, command)
     for command_name, pattern in pairs(match_strings) do
