@@ -1,4 +1,4 @@
--- Testmod v1.0.0
+-- RoRRCheats v1.0.0 (temporary name)
 -- SmoothSpatula
 
 log.info("Successfully loaded ".._ENV["!guid"]..".")
