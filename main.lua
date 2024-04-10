@@ -1,4 +1,4 @@
--- RoRRCheats v1.0.0 (temporary name)
+-- RoRRCheats v1.0.0 (placeholder name)
 -- SmoothSpatula
 
 log.info("Successfully loaded ".._ENV["!guid"]..".")
@@ -30,9 +30,10 @@ match_strings = {
 -- ========== Functions Associated With Commands ==========
 
 functions = {
-    kill_username = function(username)
+    kill_username = function(actor, username)
+        
         if username == '' then
-            print("killed your own character")
+            print(actor.user_name.. " killed themselves.")
         else
             print("kill "..username)
         end
@@ -40,7 +41,7 @@ functions = {
 }
 
 -- add functions after
-functions['give_item_name'] = function(item_name, username, amount)
+functions['give_item_name'] = function(actor, item_name, username, amount)
     if amount == nil then amount = 1 end
     print( "given "..amount.." "..item_name.." to "..username)
 end
@@ -67,7 +68,7 @@ end)
 function match_command(actor, command)
     for command_name, pattern in pairs(match_strings) do
         if string.match(command, pattern) then
-            functions[command_name] (string.match(command, pattern))
+            functions[command_name] (actor, string.match(command, pattern))
             return 0
         end
     end
