@@ -22,8 +22,8 @@ match_strings = {
     remove_item_id = '/remove'..nb..usrn..nb, -- /remove <item_id> <username> [amount]
     remove_item_name = '/remove'..wrd..usrn..nb, -- /remove <item_name> <username> [amount]
     set_field = '/set'..wrd..nb..usrn, -- /set <field_name> <value> [username]
-    set_skill_id = '/set'..nb..nb..usrn, -- /skill <bar_slot> <skill_id> [username]
-    set_skill_name = '/set'..nb..wrd..usrn, -- /skill <bar_slot> <skill_name> [username]
+    set_skill_id = '/skill'..nb..nb..usrn, -- /skill <bar_slot> <skill_id> [username]
+    set_skill_name = '/skill'..nb..wrd..usrn, -- /skill <bar_slot> <skill_name> [username]
     spawn_tp = '/spawntp' -- /spawntp
 }
 
