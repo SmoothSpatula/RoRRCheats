@@ -1,4 +1,4 @@
--- RoRRCheats v1.0.0 (placeholder name)
+-- RoRRConsole v1.0.0 (placeholder name)
 -- SmoothSpatula
 
 log.info("Successfully loaded ".._ENV["!guid"]..".")
