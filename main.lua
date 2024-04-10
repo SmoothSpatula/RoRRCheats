@@ -34,12 +34,12 @@ end
 
 function give_item_name(item_name, username, amount)
   if amount == nil then amount = 1 end
-  print( "give "..username.." "..amount.." "..item_name)
+  print( "given "..amount.." "..item_name.." to "..username)
 end
 
 -- ========== Main ==========
 
-command = "/give Umigatari 12 GoatHoof"
+command = "/give GoatHoof Umigatari 12"
 --command = "/kill"
 for command_name, pattern in pairs(match_strings) do
   if string.match(command, pattern) then
