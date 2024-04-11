@@ -10,69 +10,50 @@ log.info("Successfully loaded ".._ENV["!guid"]..".")
 
 local lvlToGive = 0
 
-o_user = '%s*([^%s]*)' -- optional username
-m_user = '%s+([^%s]+)' -- mandatory username
-o_nb = '%s*(%d*)' -- optional number
-m_nb = '%s+(%d+)' -- mandatory number
-o_wrd = '%s*(%w*)' -- optional word
-m_wrd = '%s+(%w+)' -- mandatory word
-
-
 -- <> is a mandatory field
 -- [] is an optional field
 match_strings = {
     kill_username = { 
-        regex = '/kill'.. o_user, 
         usage =  '<y>/kill <b>username',
         help_str = 'kill'
     },
     give_item = { 
-        regex = '/give'..m_nb..m_wrd..o_user, 
         usage = '<y>/give <b>amount <w>item_name or item_id <b>username',
         help_str = 'give'
     },
     give_gold = {
-        regex = '/gold'..m_nb..o_user,
         usage = '<y>/gold <w>amount <b>username',
         help_str = 'gold'
     },
     give_lvl = {
-        regex = '/lvl'..m_nb..o_user,
         usage = '<y>/lvl <w>number <b>username',
         help_str = 'lvl'
     },
     remove_item = { 
-        regex = '/remove'..m_nb..m_wrd..o_user, 
         usage = '<y>/remove <b>amount <w>item_name or item_id <b>username',
         help_str = 'remove'
     },
     set_field = { 
-        regex = '/set'..m_wrd..m_nb..o_user, 
         usage = '<y>/set field_name <w>value <b>username',
         help_str = 'set'
     },
     set_skill_id = { 
-        regex = '/skill'..m_nb..m_nb..o_user, 
         usage = '<y>/skill <w>bar_slot <w>skill_id <b>username',
         help_str = 'set'
     },
     set_skill_name = { 
-        regex = '/skill'..m_nb..m_wrd..o_user, 
         usage = '<y>/skill <w>bar_slot <w>skill_name <b>username',
         help_str  = 'skill'
     },
     spawn_tp = { 
-        regex = '/spawntp', 
         usage = '<y>/spawntp',
         help_str = 'spawntp'
     },
     kick = { 
-        regex = '/kick'..m_user, 
         usage = '<y>/kick <b>username',
         help_str = 'kick'
     },
     help = { 
-        regex = '/help'..o_user, --using this so people can type /help /give
         usage = '<y>/help <b>username',
         help_str = 'help'
     }
