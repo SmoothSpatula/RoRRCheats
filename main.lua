@@ -85,8 +85,13 @@ end
 
 local function help_print_all()
     local s = "<r>List of all commands <w>: "
+    local help_list = {}
+    -- remove duplicates
     for command_name, pattern in pairs(match_strings) do
-        s = s.."/"..pattern.help_str.." "
+        help_list[pattern.help_str] = 0
+    end
+    for help_str, x in pairs(help_list) do 
+        s = s.."/"..help_str.." "      
     end
     add_chat_message(s)
 end
