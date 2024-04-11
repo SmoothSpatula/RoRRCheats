@@ -12,8 +12,9 @@ o_user = '%s*([^%s]*)%s*' -- optional username
 m_user = '%s*([^%s]+)%s*' -- mandatory username
 o_nb = '%s*(%d*)%s*' -- optional number
 m_nb = '%s*(%d+)%s*' -- mandatory number
+o_wrd = '%s*(%a*)%s*' -- optional word
 m_wrd = '%s*(%a+)%s*' -- mandatory word
-o_wrd = '%s*(%a*)%s*' -- mandatory word
+
 
 
 -- <> is a mandatory field
