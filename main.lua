@@ -8,23 +8,26 @@ log.info("Successfully loaded ".._ENV["!guid"]..".")
 
 -- ========== Parameters ==========
 
-usrn = '%s*([^%s]*)%s*' -- username
-nb = '%s*(%d+)%s*' -- number
+o_user = '%s*([^%s]*)%s*' -- optional username
+m_user = '%s*([^%s]+)%s*' -- mandatory username
+o_nb = '%s*(%d*)%s*' -- optional number
+m_nb = '%s*(%d+)%s*' -- mandatory number
 wrd = '%s*(%a+)%s*' -- word
 
 
 -- <> is a mandatory field
 -- [] is an optional field
 match_strings = {
-    kill_username = '/kill'..usrn, -- /kill [username]
-    give_item_id = '/give'..nb..usrn..nb, -- /give <item_id> <username> [amount]
-    give_item_name = '/give'..wrd..usrn..nb, -- /give <item_name> <username> [amount]
-    remove_item_id = '/remove'..nb..usrn..nb, -- /remove <item_id> <username> [amount]
-    remove_item_name = '/remove'..wrd..usrn..nb, -- /remove <item_name> <username> [amount]
-    set_field = '/set'..wrd..nb..usrn, -- /set <field_name> <value> [username]
-    set_skill_id = '/skill'..nb..nb..usrn, -- /skill <bar_slot> <skill_id> [username]
-    set_skill_name = '/skill'..nb..wrd..usrn, -- /skill <bar_slot> <skill_name> [username]
-    spawn_tp = '/spawntp' -- /spawntp
+    kill_username = '/kill'..o_user, -- /kill [username]
+    give_item_id = '/give'..o_nb..m_nb..o_user, -- /give [amount] <item_id> [username] 
+    give_item_name = '/give'..o_nb..wrd..o_user, -- /give [amount] <item_name>  [username] 
+    remove_item_id = '/remove'..o_nb..m_nb..o_user, -- /remove [amount] <item_id> [username]
+    remove_item_name = '/remove'..o_nb..wrd..o_user, -- /remove  [amount] <item_name> [username]
+    set_field = '/set'..wrd..m_nb..o_user, -- /set <field_name> <value> [username]
+    set_skill_id = '/set'..m_nb..m_nb..o_user, -- /skill <bar_slot> <skill_id> [username]
+    set_skill_name = '/set'..m_nb..wrd..o_user, -- /skill <bar_slot> <skill_name> [username]
+    spawn_tp = '/spawntp', -- /spawntp
+    kick = '/kick'..m_user
 }
 
 -- ========== Functions Associated With Commands ==========
@@ -41,8 +44,9 @@ functions = {
 }
 
 -- add functions after
-functions['give_item_name'] = function(actor, item_name, username, amount)
-    if amount == nil then amount = 1 end
+functions['give_item_name'] = function(actor, amount, item_name, username)
+    if amount == '' then amount = 1 end
+    if username == '' then username = actor.user_name end
     print( "given "..amount.." "..item_name.." to "..username)
 end
 
@@ -76,6 +80,13 @@ function match_command(actor, command)
     return 1
 end
 
+gm.post_script_hook(gm.constants.chat_add_user_message, function(self, other, result, args)
+    match_command(args[1].value, args[2].value) -- pass actor instance and message
+end)
+
+gm.post_script_hook(gm.constants.draw_chat, function(self, other, result, args)
+    --print(result.type)
+end)
 gm.post_script_hook(gm.constants.chat_add_user_message, function(self, other, result, args)
     match_command(args[1].value, args[2].value) -- pass actor instance and message
 end)
