@@ -23,6 +23,7 @@ mods.on_all_mods_loaded(function()
     --add the function you want to add
     for k, v in pairs(mods) do
         if type(v) == "table" and v.testmod then 
+            --name, reference, usage text, command ("/public")
             ChatConsole.add_function(public_func, v.public_func, "<y> lolxdtest", "public")
         end 
     end
