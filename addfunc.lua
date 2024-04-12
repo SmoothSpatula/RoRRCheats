@@ -32,10 +32,9 @@ end)
 -- to add in main
 
 -- function add_function(ref, func, use, help)
---     print("adding function")
 --     functions[ref] = func
 --     match_strings[ref] = {
 --         usage = use,
---         help_str = help
+--         cmd_name = help
 --     }
 -- end
