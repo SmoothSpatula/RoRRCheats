@@ -9,8 +9,7 @@ Since we haven't found a way to get the chat in singleplayer please play multipl
 Commands look like this : ```/command <Mandatory Field> [Optional Field]```.
 
 I you don't specify a ```[username]```, the command will apply to you. Usernames have to be exact and are case sensitive.
-
-  
+<br><br>
 
 * ```/help [command]``` gives you a list of all commands or information on a specified command.
 * ```/give <item name or id> [amount] [username]``` gives the specified player any number of one item. Default amount is 1.
