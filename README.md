@@ -2,7 +2,7 @@
 
 Add commands to the in-game chat. 
 
-Since we haven't found a way to get the chat is singleplayer please play multiplayer for this (doesn't change anything else).
+Since we haven't found a way to get the chat in singleplayer please play multiplayer for this (doesn't change anything else).
 
 # List of commands
 
