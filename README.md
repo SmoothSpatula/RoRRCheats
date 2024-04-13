@@ -23,8 +23,6 @@ Commands look like this : ```/command <Mandatory Field> [Optional Field]```.
 Host Only
 * ```/kick [username]``` kick the specified user from the game.
 
-* ``` ```
-
 Any command with an optional username targets yourself if not specified. The specified username has to be exact and is case sensitive.
 
 
