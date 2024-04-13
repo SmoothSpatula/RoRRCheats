@@ -28,6 +28,10 @@ Host Only
 Any command with an optional username targets yourself if not specified. The specified username has to be exact and is case sensitive.
 
 
+# Ressources 
+
+[Item Cheat Sheet with Item IDs](https://lovebetween.github.io/rorritemcheatsheet/)
+
 # Adding commands from other mods
 
 You can add your own command like this :
