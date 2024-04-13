@@ -20,6 +20,10 @@ Commands look like this : ```/command <Mandatory Field> [Optional Field]```.
 * ```/skill <skillbar slot> <skill name or skill id> [username]``` replace a skill by another in your skillbar. The skillbar slots are numbered 1-4.
 
 
+* ```/set <field> <value> [username]``` sets an attribute field for the player.
+
+The possible fields for ```/set``` are : ```armor, attack_speed, critical_chance, damage, hp_regen, maxhp, maxbarrier, maxshield, armor_level, attack_speed_level, critical_chance_level, damage_level, hp_regen_level, maxhp_cap, maxhp_level```.
+
 Host Only
 * ```/kick [username]``` kick the specified user from the game.
 
