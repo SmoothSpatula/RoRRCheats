@@ -4,7 +4,7 @@ Add commands to the in-game chat.
 
 Since we haven't found a way to get the chat in singleplayer please play multiplayer for this (doesn't change anything else).
 
-# List of commands
+## List of commands
 
 Commands look like this : ```/command <Mandatory Field> [Optional Field]```.
 
@@ -31,11 +31,11 @@ Host Only
 Any command with an optional username targets yourself if not specified. The specified username has to be exact and is case sensitive.
 
 
-# Ressources 
+## Ressources 
 
 [Item Cheat Sheet with Item IDs](https://lovebetween.github.io/rorritemcheatsheet/)
 
-# Adding commands from other mods
+## Adding commands from other mods
 
 You can add your own command like this :
 
@@ -61,3 +61,18 @@ mods.on_all_mods_loaded(function()
     end
 end)
 ```
+
+## Installation Instructions
+This mod depends on the [Return Of Modding](https://github.com/return-of-modding/ReturnOfModding) loader:
+1. Download the [latest Return Of Modding release](https://github.com/return-of-modding/ReturnOfModding/releases) and follow the [Manual Installation instructions](https://github.com/return-of-modding/ReturnOfModding#manual-installation) to install it.
+2. Download this mod and extract it into the `ReturnOfModding/plugins` folder.
+3. The mod should now be loaded. Enjoy your DPS!
+
+## Special Thanks To
+* Klehrik for his helper and sharing his code
+* Dunes on the RoRR Modding Server for asking for this
+* The Return Of Modding team
+* [SeeJaeey](https://github.com/SeeJaeey) for his RoRR Cheat Sheet we forked
+
+## Contact
+For questions or bug reports, you can find us in the [RoRR Modding Server](https://discord.gg/VjS57cszMq) @Miguelito @Umigatari
