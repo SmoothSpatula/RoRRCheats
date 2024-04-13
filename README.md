@@ -10,6 +10,8 @@ Commands look like this : ```/command <Mandatory Field> [Optional Field]```.
 
 I you don't specify a ```[username]```, the command will apply to you. Usernames have to be exact and are case sensitive.
 
+  
+
 * ```/help [command]``` gives you a list of all commands or information on a specified command.
 * ```/give <item name or id> [amount] [username]``` gives the specified player any number of one item. Default amount is 1.
 * ```/remove <item name or id> [amount] [username]``` remove the any number of one item from the specified player. Default amount is 1.
