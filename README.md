@@ -7,8 +7,8 @@ Add commands to the in-game chat. Since we haven't found a way to get the chat i
 Commands look like this : ```/command <Mandatory Field> [Optional Field]```.
 
 * ```/help [command]``` gives you a list of all commands or information on a specified command.
-* ```/give ``` gives the specified player any number of one item. Default amount is 1.
-* ```/remove ``` remove the any number of one item from the specified player. Default amount is 1.
+* ```/give <item name or id> [amount] [username]``` gives the specified player any number of one item. Default amount is 1.
+* ```/remove <item name or id> [amount] [username]``` remove the any number of one item from the specified player. Default amount is 1.
 * ```/gold <amount> [username]``` gives the specified player gold.
 * ```/lvl <number> [username]``` gives the specified player levels.
 * ```/spawntp``` spawns a teleporter at your location that sends you to the next stage (it cannot make you go to the final stage).
