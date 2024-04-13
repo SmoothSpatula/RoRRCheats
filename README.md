@@ -10,7 +10,7 @@ Commands look like this : ```/command <Mandatory Field> [Optional Field]```.
 * ```/give <item name or id> [amount] [username]``` gives the specified player any number of one item. Default amount is 1.
 * ```/remove <item name or id> [amount] [username]``` remove the any number of one item from the specified player. Default amount is 1.
 * ```/gold <amount> [username]``` gives the specified player gold.
-* ```/lvl <number> [username]``` gives the specified player levels.
+* ```/lvl <number>``` gives levels to all players (exp is shared in RoRR).
 * ```/spawntp``` spawns a teleporter at your location that sends you to the next stage (it cannot make you go to the final stage).
 * ```/god [username]``` make the specified player invulnerable (this doesn't make you invulnerable to falldamage, but falldamage can't kill you anyway).
 * ```/kill [username or monster name]``` kills the specified player or all monsters from the specified monstertype.
