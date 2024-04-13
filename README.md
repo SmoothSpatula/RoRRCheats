@@ -13,7 +13,7 @@ Commands look like this : ```/command <Mandatory Field> [Optional Field]```.
 * ```/lvl <number> [username]``` gives the specified player levels.
 * ```/spawntp``` spawns a teleporter at your location that sends you to the next stage (it cannot make you go to the final stage).
 * ```/god [username]``` make the specified player invulnerable (this doesn't make you invulnerable to falldamage, but falldamage can't kill you).
-* ```/kill [username or monster name]``` kills the specified player or monstertype.
+* ```/kill [username or monster name]``` kills the specified player or all monsters from the specified monstertype.
 * ```/pvp``` enables pvp mode in multiplayer, setting each player to different teams. You can still be damaged by monsters.
 * ```/skill <skillbar slot> <skill name or skill id> [username]``` replace a skill by another in your skillbar. The skillbar slots are numbered 1-4.
 
