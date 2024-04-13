@@ -8,6 +8,8 @@ Since we haven't found a way to get the chat in singleplayer please play multipl
 
 Commands look like this : ```/command <Mandatory Field> [Optional Field]```.
 
+I you don't specify a ```[username]```, the command will apply to you. Usernames have to be exact and are case sensitive.
+
 * ```/help [command]``` gives you a list of all commands or information on a specified command.
 * ```/give <item name or id> [amount] [username]``` gives the specified player any number of one item. Default amount is 1.
 * ```/remove <item name or id> [amount] [username]``` remove the any number of one item from the specified player. Default amount is 1.
@@ -27,8 +29,6 @@ The possible fields for ```/set``` are : ```armor, attack_speed, critical_chance
 
 Host Only
 * ```/kick [username]``` kick the specified user from the game.
-
-Any command with an optional username targets yourself if not specified. The specified username has to be exact and is case sensitive.
 
 
 ## Ressources 
