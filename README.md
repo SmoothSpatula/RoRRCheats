@@ -34,7 +34,7 @@ Host Only
 
 ## Ressources 
 
-[Item Cheat Sheet with Item IDs](https://lovebetween.github.io/rorritemcheatsheet/)
+[Item Cheat Sheet with Item IDs (and skills coming soon™)](https://lovebetween.github.io/rorritemcheatsheet/)
 
 ## Adding commands from other mods
 
