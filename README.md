@@ -18,6 +18,7 @@ Commands look like this : ```/command <Mandatory Field> [Optional Field]```.
 * ```/kill [username or monster name]``` kills the specified player or all monsters from the specified monstertype.
 * ```/pvp``` enables pvp mode in multiplayer, setting each player to different teams. You can still be damaged by monsters.
 * ```/skill <skillbar slot> <skill name or skill id> [username]``` replace a skill by another in your skillbar. The skillbar slots are numbered 1-4.
+* ```/peaceful``` prevents ennemies from spawning (except from the teleporter)
 
 
 * ```/set <field> <value> [username]``` sets an attribute field for the player.
