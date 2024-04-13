@@ -46,6 +46,7 @@ mods.on_all_mods_loaded(function()
         if type(v) == "table" and v.examplemod then 
             -- name in the function array, reference, usage text, command ("/example")
             -- optional fields go at the end after mandatory fields (you can avoid doing this if you know what you're doing)
+            -- you can overwrite default commands by using the same name (here examplemod_examplefunc)
             ChatConsole.add_function(examplemod_examplefunc, v.example_func, "<y>/example <example mandatory field> [example optional field]", "example")
         end 
     end
