@@ -504,7 +504,7 @@ end
 
 -- Kick the specified user from the game
 functions['kick'] = function(actor, username)
-    if actor.m_id ~= 1 then return end
+    if actor.m_id ~= 1 or actor.user_name == username then return end
 
     for i = 1, #gm.CInstance.instances_active do
         local inst = gm.CInstance.instances_active[i]
