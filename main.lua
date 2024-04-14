@@ -1,15 +1,19 @@
--- RoRRConsole v1.0.0 (placeholder name)
+-- ChatConsole v1.0.0
 -- SmoothSpatula
 
 log.info("Successfully loaded ".._ENV["!guid"]..".")
 mods.on_all_mods_loaded(function() for k, v in pairs(mods) do if type(v) == "table" and v.hfuncs then Helper = v end end end)
 
+-- ========== Data ==========
+
+chatconsole = true
+
 -- ========== Parameters ==========
 
 local lvlToGive = 0
+local togglePeace = false
+local togglePVP = false
 
--- <> is a mandatory field
--- [] is an optional field
 match_strings = {
     kill_username = { 
         usage =  '<y>/kill <b>username',
@@ -32,7 +36,7 @@ match_strings = {
         cmd_name = 'remove'
     },
     set_field = { 
-        usage = '<y>/set field_name <w>value <b>username',
+        usage = '<y>/set <w>field_name <w>value <b>username\n <r>Possible fields : <w>armor attack_speed critical_chance damage hp_regen maxhp maxbarrier maxshield armor_level attack_speed_level critical_chance_level damage_level hp_regen_level maxhp_cap maxhp_level',
         cmd_name = 'set'
     },
     set_skill = { 
@@ -47,6 +51,14 @@ match_strings = {
         usage = '<y>/god <b>username',
         cmd_name = 'god'
     },
+    pvp = { 
+        usage = '<y>/pvp',
+        cmd_name = 'pvp'
+    },
+    peaceful = { 
+        usage = '<y>/peaceful',
+        cmd_name = 'peaceful'
+    },
     kick = { 
         usage = '<y>/kick <b>username',
         cmd_name = 'kick'
@@ -57,6 +69,7 @@ match_strings = {
     }
 }
 
+-- Fields that need to have other fields set
 composite_fields = {
     'armor',
     'attack_speed',
@@ -68,6 +81,7 @@ composite_fields = {
     'maxshield'
 }
 
+-- Fields that can be modified directly
 fields = {
     'armor_level',
     'attack_speed_level',
@@ -78,8 +92,8 @@ fields = {
     'maxhp_level'
 }
 
-
 -- ========== Utils ==========
+
 local function add_chat_message(text)
     gm.chat_add_message(gm["@@NewGMLObject@@"](gm.constants.ChatMessage, text))
 end
@@ -115,34 +129,92 @@ local function help_print_command(command)
     end
 end
 
+function add_function(ref, func, name, usage)
+    functions[ref] = func
+    match_strings[ref] = {
+        usage = use,
+        cmd_name = name
+    }
+end
+
 -- ========== Functions Associated With Commands ==========
 
-functions = {
-    kill_username = function(actor, username)
-        local killActor = actor
-        if not username then
-            print(actor.user_name.. " killed themselves.")
-        else
-            for i = 1, #gm.CInstance.instances_active do
-                local inst = gm.CInstance.instances_active[i]
-                if inst.object_index == gm.constants.oP and inst.user_name == username then
-                    killActor = inst
-                    break
-                end
-            end
-            print(actor.user_name.." killed "..username)
-        end
-        killActor.force_death = 1
-        gm.actor_set_dead(killActor, true)
-    end
-}
+functions = {}
 
 -- add functions after
-functions['give_item'] = function(actor, amount, item, username)
+
+-- Kills the specified player or all monsters from the specified monstertype
+-- Do not work instantly with the One shot protection mod
+functions['kill_username'] = function(actor, username)
+    local killActor = actor
+    local isMonster = false
+
+    -- Kill yourself
+    if not username then 
+        add_chat_message(actor.user_name.. " killed themselves.")
+        actor.hp = -1
+        return
+    end
+
+    -- Kill the specified player
+    for i = 1, #gm.CInstance.instances_active do
+        local inst = gm.CInstance.instances_active[i]
+        if inst.object_index == gm.constants.oP and inst.user_name == username then
+            add_chat_message(actor.user_name.." killed "..username) 
+            inst.hp = -1
+            return
+        end
+    end
+    
+    -- Find if the provided name is the name of a monster
+    local monsters = gm.variable_global_get("class_monster_card")
+    local lowerMonsterNameRequest = string.lower(username)
+    local monster = nil
+
+    for i = 1, #monsters do
+        local lowerMonsterName = string.lower(monsters[i][2])
+        
+        if lowerMonsterNameRequest == lowerMonsterName or string.find(lowerMonsterNameRequest, lowerMonsterName) or string.find(lowerMonsterName, lowerMonsterNameRequest) then
+            monster = lowerMonsterName
+            break
+        end
+    end
+
+    -- Find and kill all instances with the provided name
+    for i = 1, #gm.CInstance.instances_active do
+        local inst = gm.CInstance.instances_active[i]
+
+        if inst.name then
+            local lowerMonsterName = string.lower(inst.name)
+            if inst.team == 2 and (lowerMonsterName == monster or string.find(monster, lowerMonsterName) or string.find(lowerMonsterName, monster))then
+                inst.hp = -1
+                isMonster = true
+            end
+        end
+    end
+    
+    if isMonster then 
+        add_chat_message(actor.user_name.." killed all "..monster) 
+        return 
+    end
+    
+    -- Careful, do not make any mistakes
+    if not monster then
+        add_chat_message(actor.user_name.." has been judged") 
+        actor.hp = -1
+    end
+end
+
+-- Gives the specified player any number of one item. Default amount is 1
+functions['give_item'] = function(actor, item, amount, username)
     local giveActor = actor
+    local giveAmount = tonumber(amount)
     local isFound = false
 
-    if not tonumber(amount) then return end
+    if not username and not tonumber(amount) then 
+        username = amount
+        giveAmount = 1
+    end
     
     if username then
         for i = 1, #gm.CInstance.instances_active do
@@ -159,8 +231,8 @@ functions['give_item'] = function(actor, amount, item, username)
 
     -- Item ID
     if tonumber(item) then 
-        gm.item_give(giveActor, tonumber(item), tonumber(amount), false)
-        print( "given "..amount.." "..item.." to "..giveActor.user_name)
+        gm.item_give(giveActor, tonumber(item), giveAmount, false)
+        add_chat_message("Given "..amount.." "..item.." to "..giveActor.user_name)
         return
     end
 
@@ -171,14 +243,15 @@ functions['give_item'] = function(actor, amount, item, username)
         local lowerItemName = string.lower(items[i][2])
 
         if lowerItemNameRequest == lowerItemName or string.find(lowerItemNameRequest, lowerItemName) or string.find(lowerItemName, lowerItemNameRequest) then
-            gm.item_give(giveActor, i-1, tonumber(amount), false)
-            print( "given "..amount.." "..items[i][2].." to "..giveActor.user_name)
+            gm.item_give(giveActor, i-1, giveAmount, false)
+            add_chat_message("Given "..amount.." "..items[i][2].." to "..giveActor.user_name)
             return
         end
     end
 
 end
 
+-- Gives the specified player gold
 functions['give_gold'] = function(actor, amount, username)
     local giveActor = actor
     local isFound = false
@@ -198,48 +271,39 @@ functions['give_gold'] = function(actor, amount, username)
         if not isFound then return end
     end
 
+    -- Did not find a way to spawn a gold directly with a custom value
+    -- So we spawn a gold and try to find it and modify its value
     gm.item_drop_object(gm.constants.oEfGold, giveActor.x, giveActor.y, 0, false)
     local goldObj = Helper.find_active_instance(gm.constants.oEfGold)
     goldObj.value = goldObj.value + tonumber(amount)
-    print( "given "..amount.." gold to "..giveActor.user_name)
 
+    add_chat_message("Given "..amount.." gold to "..giveActor.user_name)
 end
 
-functions['give_lvl'] = function(actor, number, username)
-    local giveActor = actor
-    local isFound = false
-
+-- Gives levels to all players (exp is shared in RoRR)
+functions['give_lvl'] = function(actor, number)
     if not tonumber(number) then return end
     
-    if username then
-        for i = 1, #gm.CInstance.instances_active do
-            local inst = gm.CInstance.instances_active[i]
-            if inst.object_index == gm.constants.oP and inst.user_name == username then
-                giveActor = inst
-                isFound = true
-                break
-            end
-        end
-
-        if not isFound then return end
-    end
-    
     lvlToGive = tonumber(number)
-    print( "given "..number.." level to "..giveActor.user_name)
-
+    add_chat_message("Given "..number.." level to all player")
 end
 
-functions['remove_item'] = function(actor, amount, item, username)
-    local giveActor = actor
+-- Remove the any number of one item from the specified player. Default amount is 1
+functions['remove_item'] = function(actor, item, amount, username)
+    local removeActor = actor
+    local removeAmount = tonumber(amount)
     local isFound = false
 
-    if not tonumber(amount) then return end
+    if not username and not removeAmount then 
+        username = amount
+        removeAmount = 1
+    end
     
     if username then
         for i = 1, #gm.CInstance.instances_active do
             local inst = gm.CInstance.instances_active[i]
             if inst.object_index == gm.constants.oP and inst.user_name == username then
-                giveActor = inst
+                removeActor = inst
                 isFound = true
                 break
             end
@@ -250,8 +314,8 @@ functions['remove_item'] = function(actor, amount, item, username)
 
     -- Item ID
     if tonumber(item) then 
-        gm.item_take(giveActor, tonumber(item), tonumber(amount), false)
-        print( "taken "..amount.." "..item.." to "..giveActor.user_name)
+        gm.item_take(removeActor, tonumber(item), removeAmount, false)
+        add_chat_message("Taken "..amount.." "..item.." to "..removeActor.user_name)
         return
     end
 
@@ -262,14 +326,15 @@ functions['remove_item'] = function(actor, amount, item, username)
         local lowerItemName = string.lower(items[i][2])
 
         if lowerItemNameRequest == lowerItemName or string.find(lowerItemNameRequest, lowerItemName) or string.find(lowerItemName, lowerItemNameRequest) then
-            gm.item_take(giveActor, i-1, tonumber(amount), false)
-            print( "taken "..amount.." "..items[i][2].." to "..giveActor.user_name)
+            gm.item_take(removeActor, i-1, removeAmount, false)
+            add_chat_message("Taken "..amount.." "..items[i][2].." from "..removeActor.user_name)
             return
         end
     end
 
 end
 
+-- Sets an attribute field for the player
 functions['set_field'] = function(actor, field_name, value, username)
     local fieldActor = actor
     local fieldValue = tonumber(value)
@@ -290,24 +355,29 @@ functions['set_field'] = function(actor, field_name, value, username)
         if not isFound then return end
     end
         
+    -- Fields that can be directly changed
     for _, field in ipairs(fields) do
         if field == field_name then
             fieldActor[field_name] = fieldValue
+            add_chat_message("Set "..field_name.." of "..fieldActor.user_name.." to "..fieldValue)
             return
         end
     end
-
+    
+    -- Fields that need to have multiple value changed to work
     for _, comp_field in ipairs(composite_fields) do
         if comp_field == field_name then
             if not fieldActor[field_name.."_level"] then
                 fieldActor[field_name] = fieldValue
                 fieldActor[field_name.."_base"] = fieldValue
                 fieldActor[field_name:gsub('max', '')] = fieldValue
+                add_chat_message("Set "..field_name.." of "..fieldActor.user_name.." to "..fieldValue)
                 return
             end
             
             fieldActor[field_name..'_base'] = fieldValue - (fieldActor.level-1) * fieldActor[field_name..'_level']
             fieldActor[field_name] = fieldValue
+            add_chat_message("Set "..field_name.." of "..fieldActor.user_name.." to "..fieldValue)
 
             if field_name == 'maxhp' then fieldActor.hp = fieldValue end
 
@@ -315,10 +385,7 @@ functions['set_field'] = function(actor, field_name, value, username)
     end
 end
 
--- gm.post_script_hook(gm.constants.step_player, function()
---     print("step_player")
--- end)
-
+-- Replace a skill by another in your skillbar. The skillbar slots are numbered 1-4
 functions['set_skill'] = function(actor, bar_slot, skill, username)
     local skillActor = actor
     local isFound = false
@@ -341,7 +408,7 @@ functions['set_skill'] = function(actor, bar_slot, skill, username)
     -- Skill ID
     if tonumber(skill) then 
         gm.actor_skill_set(skillActor, tonumber(bar_slot)-1, tonumber(skill))
-        print( "Set skill "..skill.." in bar slot "..bar_slot.." to "..skillActor.user_name)
+        add_chat_message("Set skill "..skill.." in bar slot "..bar_slot.." to "..skillActor.user_name)
         return
     end
 
@@ -350,13 +417,14 @@ functions['set_skill'] = function(actor, bar_slot, skill, username)
     for i=1, 185 do
         if string.lower(skill) == string.lower(skills[i][2]) then
             gm.actor_skill_set(skillActor, tonumber(bar_slot)-1, i-1)
-            print( "Set skill "..skills[i][2].." in bar slot "..bar_slot.." to "..skillActor.user_name)
+            add_chat_message( "Set skill "..skills[i][2].." in bar slot "..bar_slot.." to "..skillActor.user_name)
             return
         end
     end
     
 end
 
+-- Spawns a teleporter at your location that sends you to the next stage (it cannot make you go to the final stage)
 functions['spawn_tp'] = function(actor)
     local tpObj = Helper.find_active_instance_all(gm.constants.oTrialsFinalShortcutTeleporter)
     if #tpObj > 0 then 
@@ -366,8 +434,10 @@ functions['spawn_tp'] = function(actor)
     end
 
     gm.instance_create_depth(actor.x, actor.y, 1, gm.constants.oTrialsFinalShortcutTeleporter)
+    add_chat_message("Spawned teleporter at "..actor.user_name)
 end
 
+-- Make the specified player invulnerable
 functions['god'] = function(actor, username)
     local godActor = actor
     local isFound = false
@@ -385,45 +455,73 @@ functions['god'] = function(actor, username)
         if not isFound then return end
     end
     
-    if not godActor.intangible then godActor.intangible = 0 end
+    -- Just here to fix the boolean that transform into an integer
+    if not godActor.intangible then godActor.intangible = 0 end 
+
+    -- Switch intangibility of the player
     godActor.intangible = (godActor.intangible + 1) % 2
+
+    if godActor.intangible == 1 then
+        add_chat_message(godActor.user_name.." became a god")
+    else
+        add_chat_message(godActor.user_name.." became a mortal")
+    end
+
 end
 
+-- Enables pvp mode in multiplayer, setting each player to different teams. You can still be damaged by monsters
+functions['pvp'] = function(actor)
+    for i = 1, #gm.CInstance.instances_active do
+        local inst = gm.CInstance.instances_active[i]
+        if inst.object_index == gm.constants.oP then
+            if togglePVP then
+                inst.team = 1
+            else
+                inst.team = inst.m_id + 3 -- +3 because those teams are already taken
+            end
+        end
+    end
+
+    togglePVP = not togglePVP
+
+    if togglePVP then
+        add_chat_message("PVP mode activated")
+    else
+        add_chat_message("PVP mode deactivated")
+    end
+end
+
+-- Prevent monster from spawning (does not work for TP boss)
+functions['peaceful'] = function(actor)
+    togglePeace = not togglePeace
+
+    if togglePeace then
+        add_chat_message("Peaceful mode activated")
+    else
+        add_chat_message("Peaceful mode deactivated")
+    end
+end
+
+-- Kick the specified user from the game
 functions['kick'] = function(actor, username)
+    if actor.m_id ~= 1 then return end
+
     for i = 1, #gm.CInstance.instances_active do
         local inst = gm.CInstance.instances_active[i]
         if inst.object_index == gm.constants.oP and inst.user_name == username then
-            print(inst.user_name)
-            print(gm._mod_net_isAuthority(inst))
-            print(gm._mod_net_isHost(inst))
-            print(gm._mod_net_isClient(inst))
-            print(gm._mod_net_isOnline(inst))
-            -- gm.disconnect_player(inst)
+            add_chat_message(inst.user_name.." has been kicked")
+            gm.disconnect_player(inst)
         end
     end
 end
 
+-- Gives you a list of all commands or information on a specified command
 functions['help'] = function(actor, command)
     if command == '' or command == nil then 
         help_print_all() 
     return end
     help_print_command(command)
 end
-
-        
--- ========== ImGui ==========
-
--- Console in ImGui, Work In Progress
-local text = ""
-gui.add_imgui(function()
-    if ImGui.Begin("Console") then
-        text, selected = ImGui.InputText("", text, 200)
-        if selected then 
-            print(text)
-        end
-        ImGui.TextColored(0.5, 0, 0, 1, text)
-    end
-end)
 
 -- ========== Main ==========
 
@@ -440,7 +538,6 @@ function match_command(actor, command)
             local func_params = {}
             for param in command:gmatch('([^%s]+)') do
                 func_params[#func_params+1] = param
-                print(param)
             end
             functions[command_name](actor, table.unpack(func_params))
             return
@@ -457,10 +554,25 @@ gm.post_script_hook(gm.constants.chat_add_user_message, function(self, other, re
     match_command(args[1].value, args[2].value) -- pass actor instance and message
 end)
 
+-- Used for the peace command
+gm.pre_code_execute(function(self, other, code, result, flags)
+    if code.name:match("oDirectorControl_Alarm_1") and togglePeace then
+        self:alarm_set(1, 60)
+        return false
+    end
+end)
+
+-- Used for the level command
 gm.post_script_hook(gm.constants.__input_system_tick, function()
     if lvlToGive > 0 then
         local director = gm._mod_game_getDirector()
         director.player_exp = director.player_exp_required+0.1
         lvlToGive = lvlToGive - 1
     end
+end)
+
+-- Reset the toggle variables
+gm.post_script_hook(gm.constants.run_destroy, function()
+    togglePeace = false
+    togglePVP = false
 end)
