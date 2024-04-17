@@ -1,8 +1,8 @@
 # ChatConsole
 
-Add commands to the in-game chat. 
+Add commands to the in-game chat.
 
-Since we haven't found a way to get the chat in singleplayer please play multiplayer for this (doesn't change anything else).
+Since we haven't found a way to get the chat in singleplayer please play multiplayer for this (don't worry it sohuld skip the 5 second timer after you press ready). 
 
 ## List of commands
 
