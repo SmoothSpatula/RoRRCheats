@@ -1,4 +1,4 @@
--- ChatConsole v1.0.0
+-- ChatConsole v1.0.1
 -- SmoothSpatula
 
 log.info("Successfully loaded ".._ENV["!guid"]..".")
