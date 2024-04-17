@@ -1,10 +1,10 @@
 ﻿{
 	"name": "ChatConsole",
-	"version_number": "1.0.0",
+	"version_number": "1.0.1",
 	"website_url": "https://github.com/SmoothSpatula/SmoothSpatula-ChatConsole",
 	"description": "Adds chat commands (launch in multiplayer)",
 	"dependencies": [
-		"ReturnOfModding-ReturnOfModding-1.0.0",
-		"Klehrik-HelperFunctions-1.0.1"
+		"ReturnOfModding-ReturnOfModding-1.0.22",
+		"Klehrik-HelperFunctions-1.0.4"
 	]
 }
