@@ -1,4 +1,4 @@
--- ChatConsole v1.0.1
+-- ChatConsole v1.0.2
 -- SmoothSpatula
 
 log.info("Successfully loaded ".._ENV["!guid"]..".")
@@ -579,10 +579,17 @@ end)
 
 -- Skips the multiplayer timer (Adapted from a code from Klehrik)
 gm.pre_script_hook(gm.constants._ui_draw_button, function(self, other, result, args)
-    if not Helper.is_lobby_host() then return end -- Are you the host?
+    -- Are you the host?
+    if not Helper.is_lobby_host() then return end
     local smenu = Helper.find_active_instance(gm.constants.oSelectMenu)
-    -- Skip multiplayer ready timers
-    if smenu then smenu:alarm_set(1, math.min(1, smenu:alarm_get(1))) end
+    -- Skip multiplayer ready timers 
+    -- check if all players are ready
+    if smenu then 
+        for i=1, #smenu.player_icon_instances do
+            if not smenu.player_icon_instances[i].preplayer_instance.ready then return end
+        end
+        smenu:alarm_set(1, math.min(1, smenu:alarm_get(1)))
+    end
     local res = Helper.find_active_instance(gm.constants.oResultsScreen)
     if res then res:alarm_set(4, math.min(1, res:alarm_get(4))) end
 end)
