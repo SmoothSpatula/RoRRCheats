@@ -2,7 +2,7 @@
 
 Add commands to the in-game chat.
 
-Since we haven't found a way to get the chat in singleplayer please play multiplayer for this (don't worry it should skip the 5 second timer after you press ready). 
+Since we haven't found a way to get the chat in singleplayer please play multiplayer for this (don't worry it skips the 5 second ready timer). 
 
 ## List of commands
 
