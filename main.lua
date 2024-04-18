@@ -578,10 +578,12 @@ gm.post_script_hook(gm.constants.run_destroy, function()
 end)
 
 -- Skips the multiplayer timer (Adapted from a code from Klehrik)
+local smenu = nil
+local res = nil
 gm.pre_script_hook(gm.constants._ui_draw_button, function(self, other, result, args)
     -- Are you the host?
     if not Helper.is_lobby_host() then return end
-    local smenu = Helper.find_active_instance(gm.constants.oSelectMenu)
+    smenu = Helper.find_active_instance(gm.constants.oSelectMenu)
     -- Skip multiplayer ready timers 
     -- check if all players are ready
     if smenu then 
@@ -590,6 +592,6 @@ gm.pre_script_hook(gm.constants._ui_draw_button, function(self, other, result, a
         end
         smenu:alarm_set(1, math.min(1, smenu:alarm_get(1)))
     end
-    local res = Helper.find_active_instance(gm.constants.oResultsScreen)
+    res = Helper.find_active_instance(gm.constants.oResultsScreen)
     if res then res:alarm_set(4, math.min(1, res:alarm_get(4))) end
 end)
