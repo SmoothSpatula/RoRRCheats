@@ -8,7 +8,17 @@ Since we haven't found a way to get the chat in singleplayer please play multipl
 
 Commands look like this : ```/command <Mandatory Field> [Optional Field]```.
 
-I you don't specify a ```[username]```, the command will apply to you. Usernames have to be exact and are case sensitive.
+If you don't specify a ```[username]```, the command will apply to you. Usernames have to be exact and are case sensitive.
+<br>
+
+
+### New in v1.0.3
+
+* ```/toggledownfall``` toggles between rainy and clear weather.
+* ```/spawn <object name or id>``` spawns any object at the player's location. [List of all objects](https://github.com/SmoothSpatula/SmoothSpatula-RoRRutils/blob/main/FullDump.log#L447)
+* ```/exec <filename>``` execute all commands in ```ReturnOfModding\config\SmoothSpatula-ChatConsole\filename```.
+
+An executable file contains a single command on each line, it can be of any filetype. Commands are run sequentially in order.
 <br><br>
 
 * ```/help [command]``` gives you a list of all commands or information on a specified command.
@@ -28,7 +38,8 @@ I you don't specify a ```[username]```, the command will apply to you. Usernames
 
 The possible fields for ```/set``` are : ```armor, attack_speed, critical_chance, damage, hp_regen, maxhp, maxbarrier, maxshield, armor_level, attack_speed_level, critical_chance_level, damage_level, hp_regen_level, maxhp_cap, maxhp_level```.
 
-Host Only
+
+### Host Only
 * ```/kick [username]``` kick the specified user from the game.
 
 
