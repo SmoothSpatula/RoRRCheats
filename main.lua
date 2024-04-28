@@ -1,4 +1,4 @@
--- ChatConsole v1.0.2
+-- ChatConsole v1.0.3
 -- SmoothSpatula
 
 log.info("Successfully loaded ".._ENV["!guid"]..".")
@@ -66,6 +66,18 @@ match_strings = {
     help = { 
         usage = '<y>/help <b>username',
         cmd_name = 'help'
+    },
+    spawn = {
+        usage = '<y>/spawn <w>object name or id',
+        cmd_name = 'spawn'
+    },
+    toggledownfall = {
+        usage = '<y>/toggledownfall',
+        cmd_name = 'toggledownfall'
+    },
+    exec = {
+        usage = '<y>/exec <w>filename',
+        cmd_name = 'exec'
     }
 }
 
@@ -437,6 +449,44 @@ functions['spawn_tp'] = function(actor)
     add_chat_message("Spawned teleporter at "..actor.user_name)
 end
 
+-- Spawns any object at the player's location and on the specified layer
+functions['spawn'] = function(actor, object_name, layer)
+    local number = tonumber(object_name)
+    
+    if layer == nil or not tonumber(layer) then layer = 1
+    else layer = tonumber (layer) end
+    if number then
+        if number > 795 then
+            add_chat_message("Object id has to be under 795")
+        else
+            local inst = gm.instance_create_depth(actor.x, actor.y, layer, number)
+
+            add_chat_message("<w>Spawned <c>"..inst.object_name)
+        end
+    else
+        if gm.constants[object_name] == nil then 
+            add_chat_message("Wrong object name")
+        else
+            gm.instance_create_depth(actor.x, actor.y, layer, gm.constants[object_name])
+        end
+    end
+end
+
+-- Toggles rainy weather
+functions['toggledownfall'] = function(actor)
+    local rainObj = Helper.find_active_instance_all(gm.constants.oEfRaining)
+    if #rainObj > 0 then 
+        for i = 1, #rainObj do
+            gm.instance_destroy(rainObj[i])
+        end
+        add_chat_message("<b>The rain has stopped<w>")
+        return
+    end
+
+    gm.instance_create_depth(actor.x, actor.y, 1, gm.constants.oEfRaining)
+    add_chat_message("<b>A storm is coming...")
+end
+
 -- Make the specified player invulnerable
 functions['god'] = function(actor, username)
     local godActor = actor
@@ -515,6 +565,20 @@ functions['kick'] = function(actor, username)
     end
 end
 
+-- Executes all commands found in the specified file, using the actor for all commands
+functions['exec'] = function(actor, filename)
+    local path = path.combine(_ENV["!config_mod_folder_path"], filename)
+    local file = io.open(path, "rb")
+    if not file then 
+        add_chat_message("<r>Couldnt find file to execute<w>")
+        return
+    end
+    for line in io.lines(path) do
+        match_command(actor, line)
+    end
+    file:close()
+end
+
 -- Gives you a list of all commands or information on a specified command
 functions['help'] = function(actor, command)
     if command == '' or command == nil then 
@@ -524,10 +588,6 @@ functions['help'] = function(actor, command)
 end
 
 -- ========== Main ==========
-
---command examples
--- /give GoatHoof Umigatari 12
--- /kill
 
 function match_command(actor, command)
     command = command..' '
@@ -578,12 +638,10 @@ gm.post_script_hook(gm.constants.run_destroy, function()
 end)
 
 -- Skips the multiplayer timer (Adapted from a code from Klehrik)
-local smenu = nil
-local res = nil
 gm.pre_script_hook(gm.constants._ui_draw_button, function(self, other, result, args)
     -- Are you the host?
     if not Helper.is_lobby_host() then return end
-    smenu = Helper.find_active_instance(gm.constants.oSelectMenu)
+    local smenu = Helper.find_active_instance(gm.constants.oSelectMenu)
     -- Skip multiplayer ready timers 
     -- check if all players are ready
     if smenu then 
@@ -592,6 +650,6 @@ gm.pre_script_hook(gm.constants._ui_draw_button, function(self, other, result, a
         end
         smenu:alarm_set(1, math.min(1, smenu:alarm_get(1)))
     end
-    res = Helper.find_active_instance(gm.constants.oResultsScreen)
+    local res = Helper.find_active_instance(gm.constants.oResultsScreen)
     if res then res:alarm_set(4, math.min(1, res:alarm_get(4))) end
 end)
